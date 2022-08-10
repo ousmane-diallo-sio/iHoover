@@ -41,6 +41,9 @@ public class MainActivity extends AppCompatActivity {
         spHeight.setAdapter(spsAdapter);
         spLength.setAdapter(spsAdapter);
 
+        spHeight.setSelection(spsAdapter.getCount() -1);
+        spLength.setSelection(spsAdapter.getCount() -1);
+
     }
 
     public void createGrid(View view) {
