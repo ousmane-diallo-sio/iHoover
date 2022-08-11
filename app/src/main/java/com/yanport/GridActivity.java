@@ -51,12 +51,12 @@ public class GridActivity extends AppCompatActivity {
             gridContainer.addView(row);
         }
 
-        LinearLayout layout = (LinearLayout) this.gridContainer.getChildAt(5);
+        /*LinearLayout layout = (LinearLayout) this.gridContainer.getChildAt(5);
         LinearLayout case1 = (LinearLayout) layout.getChildAt(4);
         case1.setBackgroundResource(R.color.blue);
         TextView tv = new TextView(this);
         tv.setText("Test");
-        case1.addView(tv);
+        case1.addView(tv);*/
 
 
 
