@@ -8,12 +8,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
+
+import com.yanport.entites.Vacuum;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GridActivity extends AppCompatActivity {
 
@@ -41,7 +48,6 @@ public class GridActivity extends AppCompatActivity {
 
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-
         for(int i = 0; i < this.gridHeight; i++){
             LinearLayout row = (LinearLayout) inflater.inflate(R.layout.grid_row, null);
             for(int j = 0; j < this.gridLength; j++){
@@ -51,12 +57,15 @@ public class GridActivity extends AppCompatActivity {
             gridContainer.addView(row);
         }
 
-        /*LinearLayout layout = (LinearLayout) this.gridContainer.getChildAt(5);
-        LinearLayout case1 = (LinearLayout) layout.getChildAt(4);
+        Vacuum vacuum = new Vacuum(new Pair<>(gridLength, gridHeight), new ImageView(this));
+
+        LinearLayout layout = (LinearLayout) this.gridContainer.getChildAt(0);
+        layout.setBackgroundResource(R.color.green);
+        LinearLayout case1 = (LinearLayout) layout.getChildAt(0);
         case1.setBackgroundResource(R.color.blue);
         TextView tv = new TextView(this);
         tv.setText("Test");
-        case1.addView(tv);*/
+        case1.addView(vacuum.getVacuumImg());
 
 
 

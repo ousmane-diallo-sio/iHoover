@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
         this.spHeight = findViewById(R.id.spHeight);
         this.spLength = findViewById(R.id.spLength);
 
-        for(int i=2; i<11; i++){
+        for(int i=7; i<11; i++){
             possibleValues.add(i);
             Log.i(this.logTag, String.format("Ajout de l'élement n°%s à la liste", i));
         }

@@ -1,5 +1,6 @@
 package com.yanport.entites;
 
+import android.util.Log;
 import android.widget.Toast;
 
 
@@ -11,6 +12,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Coordinates {
+
+    private String logTag = "Coordinates";
 
     // Position de l'aspirateur, la 1ère valeur correspond à x et la 2ème à y.
     private MutablePair<Integer, Integer> position = new MutablePair<>(5,5);
@@ -82,6 +85,7 @@ public class Coordinates {
                     this.decreasePositionY();
             }
         }
+        Log.i(logTag, String.format("Position actuelle : [%s, %s]", this.position.first, this.position.second));
         return this.position;
     }
 
@@ -101,6 +105,7 @@ public class Coordinates {
                 this.orientation = orientations.get(orientations.indexOf(this.orientation) -1);
             }
         }
+        Log.i(logTag, String.format("Orientation actuelle : %s", this.orientation));
         return this.orientation;
     }
 
