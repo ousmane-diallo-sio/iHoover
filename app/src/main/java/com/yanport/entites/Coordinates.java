@@ -1,6 +1,7 @@
 package com.yanport.entites;
 
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 
@@ -74,22 +75,22 @@ public class Coordinates {
         if (isMovementPossible()){
             switch (orientation){
                 case N:
-                    this.increasePositionX();
-                    break;
-                case E:
                     this.increasePositionY();
                     break;
+                case E:
+                    this.increasePositionX();
+                    break;
                 case S:
-                    this.decreasePositionX();
-                case W:
                     this.decreasePositionY();
+                case W:
+                    this.decreasePositionX();
             }
         }
         Log.i(logTag, String.format("Position actuelle : [%s, %s]", this.position.first, this.position.second));
         return this.position;
     }
 
-    public Orientation rotate(Commands command){
+    public Orientation rotate(Commands command, ImageView vacuumImg){
         List<Orientation> orientations = Arrays.asList(Orientation.values());
         if(command == Commands.D){
             if(this.orientation == orientations.get(orientations.size() -1)){
@@ -97,6 +98,7 @@ public class Coordinates {
             } else {
                 this.orientation = orientations.get(orientations.indexOf(this.orientation) +1);
             }
+            vacuumImg.setRotation(vacuumImg.getRotation() +90);
         }
         else if(command == Commands.G){
             if(this.orientation == orientations.get(0)){
@@ -104,6 +106,7 @@ public class Coordinates {
             } else {
                 this.orientation = orientations.get(orientations.indexOf(this.orientation) -1);
             }
+            vacuumImg.setRotation(vacuumImg.getRotation() -90);
         }
         Log.i(logTag, String.format("Orientation actuelle : %s", this.orientation));
         return this.orientation;

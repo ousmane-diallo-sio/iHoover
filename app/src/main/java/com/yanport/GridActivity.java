@@ -12,11 +12,14 @@ import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
+import com.yanport.entites.Commands;
 import com.yanport.entites.Vacuum;
 
 import java.util.ArrayList;
@@ -30,6 +33,7 @@ public class GridActivity extends AppCompatActivity {
     int gridLength;
 
     TableLayout gridContainer;
+    Button btnStart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +41,7 @@ public class GridActivity extends AppCompatActivity {
         setContentView(R.layout.activity_grid);
 
         this.gridContainer = findViewById(R.id.gridContainer);
+        this.btnStart = findViewById(R.id.btnStart);
 
         Bundle bundle = new Bundle();
         bundle = getIntent().getExtras();
@@ -51,21 +56,34 @@ public class GridActivity extends AppCompatActivity {
         for(int i = 0; i < this.gridHeight; i++){
             LinearLayout row = (LinearLayout) inflater.inflate(R.layout.grid_row, null);
             for(int j = 0; j < this.gridLength; j++){
-                View box = inflater.inflate(R.layout.grid_box, row);
+                LinearLayout box = (LinearLayout) inflater.inflate(R.layout.grid_box, row);
+                box.setId(View.generateViewId());
             }
 
             gridContainer.addView(row);
         }
 
-        Vacuum vacuum = new Vacuum(new Pair<>(gridLength, gridHeight), new ImageView(this));
+        Vacuum vacuum = new Vacuum(gridContainer, new Pair<>(gridLength, gridHeight), new ImageView(this));
+        List<Commands> commandList = new ArrayList();
+        //commandList.add(Commands.D);
+        commandList.add(Commands.A);
+        //commandList.add(Commands.D);
+        //commandList.add(Commands.A);
 
-        LinearLayout layout = (LinearLayout) this.gridContainer.getChildAt(0);
+        btnStart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                vacuum.move(commandList);
+            }
+        });
+
+
+        /*LinearLayout layout = (LinearLayout) this.gridContainer.getChildAt(0);
         layout.setBackgroundResource(R.color.green);
         LinearLayout case1 = (LinearLayout) layout.getChildAt(0);
         case1.setBackgroundResource(R.color.blue);
         TextView tv = new TextView(this);
-        tv.setText("Test");
-        case1.addView(vacuum.getVacuumImg());
+        tv.setText("Test");*/
 
 
 

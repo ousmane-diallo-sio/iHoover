@@ -3,6 +3,7 @@
     android:layout_height="match_parent"
     android:layout_width="match_parent"
     android:layout_weight="1"
+    android:animateLayoutChanges="true"
     android:orientation="horizontal"
     android:background="#10000000"
     android:rotation="180"
