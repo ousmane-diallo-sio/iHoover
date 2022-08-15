@@ -2,10 +2,12 @@ package com.yanport;
 
 import static com.yanport.R.color.white;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Pair;
@@ -34,6 +36,8 @@ public class GridActivity extends AppCompatActivity {
 
     TableLayout gridContainer;
     Button btnStart;
+    TextView tvPosition;
+    TextView tvOrientation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +46,8 @@ public class GridActivity extends AppCompatActivity {
 
         this.gridContainer = findViewById(R.id.gridContainer);
         this.btnStart = findViewById(R.id.btnStart);
+        this.tvPosition = findViewById(R.id.tvPosition);
+        this.tvOrientation = findViewById(R.id.tvOrientation);
 
         Bundle bundle = new Bundle();
         bundle = getIntent().getExtras();
@@ -63,17 +69,25 @@ public class GridActivity extends AppCompatActivity {
             gridContainer.addView(row);
         }
 
-        Vacuum vacuum = new Vacuum(gridContainer, new Pair<>(gridLength, gridHeight), new ImageView(this));
+        Vacuum vacuum = new Vacuum(gridContainer, new Pair<>(gridLength, gridHeight), new ImageView(this), tvPosition, tvOrientation);
         List<Commands> commandList = new ArrayList();
-        //commandList.add(Commands.D);
+        commandList.add(Commands.D);
         commandList.add(Commands.A);
-        //commandList.add(Commands.D);
-        //commandList.add(Commands.A);
+        commandList.add(Commands.D);
+        commandList.add(Commands.A);
+        commandList.add(Commands.D);
+        commandList.add(Commands.A);
+        commandList.add(Commands.D);
+        commandList.add(Commands.A);
+        commandList.add(Commands.A);
+
 
         btnStart.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(View view) {
                 vacuum.move(commandList);
+                btnStart.setEnabled(false);
             }
         });
 
@@ -86,15 +100,15 @@ public class GridActivity extends AppCompatActivity {
         tv.setText("Test");*/
 
 
-
-
-
-
-
     }
 
     public void quitActivity(View view) {
         Intent intent = new Intent(GridActivity.this, MainActivity.class);
         startActivity(intent);
+    }
+
+    public void reloadActivity(View view) {
+        finish();
+        startActivity(getIntent());
     }
 }

@@ -14,8 +14,6 @@ import java.util.List;
 
 public class Coordinates {
 
-    private String logTag = "Coordinates";
-
     // Position de l'aspirateur, la 1ère valeur correspond à x et la 2ème à y.
     private MutablePair<Integer, Integer> position = new MutablePair<>(5,5);
     private Orientation orientation = Orientation.N;
@@ -51,14 +49,14 @@ public class Coordinates {
                 }
                 break;
             case S:
-                if (this.getPositionY() -1 >= this.getGridDimensionY()){
+                if (this.getPositionY() -1 >= 0){
                     isPossible = true;
                 } else{
                     isPossible = false;
                 }
                 break;
             case W:
-                if (this.getPositionX() -1 >= this.getGridDimensionX()){
+                if (this.getPositionX() -1 >= 0){
                     isPossible = true;
                 } else{
                     isPossible = false;
@@ -71,7 +69,7 @@ public class Coordinates {
 
     }
 
-    public MutablePair<Integer, Integer> transform(){
+    public boolean transform(){
         if (isMovementPossible()){
             switch (orientation){
                 case N:
@@ -82,12 +80,17 @@ public class Coordinates {
                     break;
                 case S:
                     this.decreasePositionY();
+                    break;
                 case W:
                     this.decreasePositionX();
+                    break;
             }
+        } else {
+            Log.e(Vacuum.logTag, "Mouvement impossible");
+            return false;
         }
-        Log.i(logTag, String.format("Position actuelle : [%s, %s]", this.position.first, this.position.second));
-        return this.position;
+        Log.i(Vacuum.logTag, String.format("Position actuelle : [%s, %s]", this.position.first, this.position.second));
+        return true;
     }
 
     public Orientation rotate(Commands command, ImageView vacuumImg){
@@ -108,7 +111,7 @@ public class Coordinates {
             }
             vacuumImg.setRotation(vacuumImg.getRotation() -90);
         }
-        Log.i(logTag, String.format("Orientation actuelle : %s", this.orientation));
+        Log.i(Vacuum.logTag, String.format("Orientation actuelle : %s", this.orientation));
         return this.orientation;
     }
 
@@ -119,6 +122,8 @@ public class Coordinates {
     public Integer getPositionY(){
         return this.position.second;
     }
+
+    public Enum getOrientation(){ return this.orientation; }
 
     public void increasePositionX(){
         this.position.first = this.position.first + 1;
