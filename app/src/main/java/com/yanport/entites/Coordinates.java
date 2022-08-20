@@ -15,13 +15,14 @@ import java.util.List;
 public class Coordinates {
 
     // Position de l'aspirateur, la 1ère valeur correspond à x et la 2ème à y.
-    private MutablePair<Integer, Integer> position = new MutablePair<>(5,5);
+    private MutablePair<Integer, Integer> position;
     private Orientation orientation = Orientation.N;
     // Dimension de la grille, la 1ère valeur correspond à sa hauteur et la 2ème à sa largeur.
     private Pair<Integer, Integer> gridDimension;
 
-    public Coordinates(Pair<Integer, Integer> gridDimension){
+    public Coordinates(Pair<Integer, Integer> gridDimension, MutablePair<Integer, Integer> position){
         this.gridDimension = gridDimension;
+        this.position = position;
     }
 
     public Coordinates(Pair<Integer, Integer> gridDimension, MutablePair<Integer, Integer> position, Orientation orientation){

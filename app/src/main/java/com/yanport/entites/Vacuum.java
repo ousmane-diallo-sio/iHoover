@@ -19,8 +19,10 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
+import androidx.core.content.ContextCompat;
 
 import com.yanport.R;
+import com.yanport.technique.MutablePair;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,10 +39,11 @@ public class Vacuum {
     private List<ImageView> vacuumImgs = new ArrayList<>();
     private TextView tvPosition;
     private TextView tvOrientation;
+    private boolean isActive = true;
 
-    public Vacuum(TableLayout gridContainer, Pair<Integer, Integer> gridDimension, ImageView vacuumImg, TextView tvPosition, TextView tvOrientation){
+    public Vacuum(TableLayout gridContainer, Pair<Integer, Integer> gridDimension, MutablePair<Integer, Integer> vacuumPos, ImageView vacuumImg, TextView tvPosition, TextView tvOrientation){
         this.gridContainer = gridContainer;
-        this.coordinates = new Coordinates(gridDimension);
+        this.coordinates = new Coordinates(gridDimension, vacuumPos);
         this.vacuumImg = vacuumImg;
         this.tvPosition = tvPosition;
         this.tvOrientation = tvOrientation;
@@ -50,7 +53,7 @@ public class Vacuum {
             this.gridRows.add((LinearLayout) this.gridContainer.getChildAt(i));
         }
 
-        this.currentBox = (LinearLayout) this.gridRows.get(5).getChildAt(5);
+        this.currentBox = (LinearLayout) this.gridRows.get(vacuumPos.second).getChildAt(vacuumPos.first);
         this.currentBox.addView(this.vacuumImg);
 
         this.tvPosition.setText(String.format("(%s,%s)", this.coordinates.getPositionX(), this.coordinates.getPositionY()));
@@ -64,19 +67,16 @@ public class Vacuum {
     @RequiresApi(api = Build.VERSION_CODES.M)
     public Coordinates move(List<Commands> commands){
         for(int i = 0; i < commands.size(); i++){
-            if(commands.get(i) != Commands.A || this.coordinates.isMovementPossible()){
+            if(isActive){
                 Handler handler = new Handler();
                 int finalI = i;
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
+                        LinearLayout previousBox = null;
                         try{
-                            //Log.i(logTag, String.format("\n\nNombre d'élément à l'intérieur du container (1) : %s", Vacuum.this.currentBox.getChildCount()));
 
                             if(Vacuum.this.coordinates.isMovementPossible() == false){
-                                if(Vacuum.this.vacuumImgs.size() > 1){
-                                    Vacuum.this.vacuumImgs.get(Vacuum.this.vacuumImgs.size()).setColorFilter(R.color.red);
-                                }
                                 Log.e(logTag, "erreur");
                                 throw new IndexOutOfBoundsException();
                             }
@@ -95,9 +95,11 @@ public class Vacuum {
                             if(commands.get(finalI) == Commands.A){
                                 //Log.i(logTag, String.format("Nombre d'élément à l'intérieur du container (2) : %s", Vacuum.this.currentBox.getChildCount()));
                                 Vacuum.this.coordinates.transform();
-                                Vacuum.this.updateCurrentBox();
-                                Vacuum.this.currentBox.addView(img);
-                                Vacuum.this.tvPosition.setText(String.format("(%s,%s)", Vacuum.this.coordinates.getPositionX(), Vacuum.this.coordinates.getPositionY()));
+                                previousBox = Vacuum.this.updateCurrentBox();
+                                if(Vacuum.this.isActive){
+                                    Vacuum.this.currentBox.addView(img);
+                                    Vacuum.this.tvPosition.setText(String.format("(%s,%s)", Vacuum.this.coordinates.getPositionX(), Vacuum.this.coordinates.getPositionY()));
+                                }
                             }
                             else {
                                 ImageView temp = finalI == 0 ? Vacuum.this.vacuumImg : img;
@@ -106,9 +108,15 @@ public class Vacuum {
                                 Vacuum.this.currentBox.addView(img);
                                 Vacuum.this.tvOrientation.setText(Vacuum.this.coordinates.getOrientation().toString());
                             }
-                            Vacuum.this.currentBox.setBackgroundResource(R.color.blue);
+
+                            if(!isActive){
+                                Log.i(logTag, "oui test");
+                                img.setBackgroundResource(R.drawable.stop);
+                                previousBox.addView(img);
+
+                            }
                         } catch (IndexOutOfBoundsException e){
-                            Log.e(logTag, e.getMessage());
+                            Log.e(logTag, e.toString());
                         }
                     }
                 }, i *1000);
@@ -116,8 +124,6 @@ public class Vacuum {
                 break;
             }
         }
-
-        Log.i(logTag, String.format("Nombre d'élément à l'intérieur du container (3) : %s", this.currentBox.getChildCount()));
 
         return this.coordinates;
     }
@@ -135,8 +141,15 @@ public class Vacuum {
         }
     }
 
-    public void updateCurrentBox(){
+    public LinearLayout updateCurrentBox(){
+        LinearLayout previousBox = this.currentBox;
         this.currentBox = (LinearLayout) this.gridRows.get(this.coordinates.getPositionY()).getChildAt(this.coordinates.getPositionX());
+        if (currentBox == null){
+            this.isActive = false;
+        } else{
+            Vacuum.this.currentBox.setBackgroundResource(R.color.steel_blue);
+        }
+        return previousBox;
     }
 
     public Coordinates getCoordinates(){
