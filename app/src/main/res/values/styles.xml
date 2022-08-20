@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+    <style name="ActionBar" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <item name="android:background">@color/light_carmine_pink</item>
+    </style>
 </resources>
