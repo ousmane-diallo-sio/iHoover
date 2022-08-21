@@ -1,4 +1,4 @@
-**iHover**
+**iHoover**
 
 [<img src="GIMP/logo.jpg" width="100"/>](GIMP/logo.jpg)
 
