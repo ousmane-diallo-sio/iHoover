@@ -41,8 +41,8 @@ public class GridActivity extends AppCompatActivity {
     int gridHeight;
     int gridLength;
 
-    int vacuumPosX = 5;
-    int vacuumPosY = 5;
+    int vacuumPosX = 0;
+    int vacuumPosY = 0;
 
     TableLayout gridContainer;
     Button btnStart;

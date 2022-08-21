@@ -1,6 +1,7 @@
 package com.yanport.entites;
 
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -76,9 +77,8 @@ public class Vacuum {
                         LinearLayout previousBox = null;
                         try{
 
-                            if(Vacuum.this.coordinates.isMovementPossible() == false){
-                                Log.e(logTag, "erreur");
-                                throw new IndexOutOfBoundsException();
+                            if(isActive == false){
+                                throw new Exception();
                             }
 
                             Vacuum.this.currentBox.removeView(Vacuum.this.vacuumImg);
@@ -94,11 +94,13 @@ public class Vacuum {
 
                             if(commands.get(finalI) == Commands.A){
                                 //Log.i(logTag, String.format("Nombre d'élément à l'intérieur du container (2) : %s", Vacuum.this.currentBox.getChildCount()));
-                                Vacuum.this.coordinates.transform();
-                                previousBox = Vacuum.this.updateCurrentBox();
-                                if(Vacuum.this.isActive){
+                                if(Vacuum.this.coordinates.transform()){
+                                    previousBox = Vacuum.this.updateCurrentBox();
                                     Vacuum.this.currentBox.addView(img);
                                     Vacuum.this.tvPosition.setText(String.format("(%s,%s)", Vacuum.this.coordinates.getPositionX(), Vacuum.this.coordinates.getPositionY()));
+                                } else{
+                                    Vacuum.this.isActive = false;
+                                    throw new IndexOutOfBoundsException();
                                 }
                             }
                             else {
@@ -109,14 +111,21 @@ public class Vacuum {
                                 Vacuum.this.tvOrientation.setText(Vacuum.this.coordinates.getOrientation().toString());
                             }
 
-                            if(!isActive){
-                                Log.i(logTag, "oui test");
-                                img.setBackgroundResource(R.drawable.stop);
-                                previousBox.addView(img);
 
-                            }
-                        } catch (IndexOutOfBoundsException e){
+                        }
+                        catch (IndexOutOfBoundsException e){
                             Log.e(logTag, e.toString());
+                            ImageView img = Vacuum.this.vacuumImgs.get(Vacuum.this.vacuumImgs.size() -1);
+                            Vacuum.this.setupImg(img);
+                            img.setBackgroundResource(R.drawable.stop);
+                            Vacuum.this.currentBox.removeAllViews();
+                            Vacuum.this.currentBox.addView(img);
+                            AlertDialog.Builder adBuilder = new AlertDialog.Builder(Vacuum.this.vacuumImg.getContext());
+                            adBuilder.setMessage("L'aspirateur ne peut plus avancer !");
+                            adBuilder.show();
+                        }
+                        catch (Exception e) {
+                            e.printStackTrace();
                         }
                     }
                 }, i *1000);
@@ -144,16 +153,10 @@ public class Vacuum {
     public LinearLayout updateCurrentBox(){
         LinearLayout previousBox = this.currentBox;
         this.currentBox = (LinearLayout) this.gridRows.get(this.coordinates.getPositionY()).getChildAt(this.coordinates.getPositionX());
-        if (currentBox == null){
-            this.isActive = false;
-        } else{
+        if (this.currentBox != null){
             Vacuum.this.currentBox.setBackgroundResource(R.color.steel_blue);
         }
         return previousBox;
-    }
-
-    public Coordinates getCoordinates(){
-        return this.coordinates;
     }
 
 }

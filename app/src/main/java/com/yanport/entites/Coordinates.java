@@ -36,14 +36,14 @@ public class Coordinates {
 
         switch (this.orientation){
             case N:
-                if (this.getPositionY() +1 <= this.getGridDimensionY()){
+                if (this.getPositionY() +1 < this.getGridDimensionY()){
                     isPossible = true;
                 } else{
                     isPossible = false;
                 }
                 break;
             case E:
-                if (this.getPositionX() +1 <= this.getGridDimensionX()){
+                if (this.getPositionX() +1 < this.getGridDimensionX()){
                     isPossible = true;
                 } else{
                     isPossible = false;
@@ -87,7 +87,7 @@ public class Coordinates {
                     break;
             }
         } else {
-            Log.e(Vacuum.logTag, "Mouvement impossible");
+            Log.e(Vacuum.logTag, "Mouvement impossible, position actuelle : " + this.getPositionToString());
             return false;
         }
         Log.i(Vacuum.logTag, String.format("Position actuelle : [%s, %s]", this.position.first, this.position.second));
@@ -122,6 +122,10 @@ public class Coordinates {
 
     public Integer getPositionY(){
         return this.position.second;
+    }
+
+    public String getPositionToString(){
+        return String.format("[%s,%s]", this.getPositionX(), this.getPositionY());
     }
 
     public Enum getOrientation(){ return this.orientation; }
